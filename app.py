@@ -28,27 +28,28 @@ with tab2:
     
     c1, c2 = st.columns(2)
     with c1:
-     celsius = st.number_input("Введіть температуру в градусах Цельсія:", value=1.0, step=1.0)
+     celsius = st.number_input("Введіть температуру в градусах Цельсія():", value=1.0, step=1.0)
 
 with c2:
     fahrenheit = celsius * 1.8 + 32
     st.write(f"{fahrenheit} °F")
 
 
-with tab3:
-    st.header("Мої улюблені навчальні сайти")
-    
-    link_col1, link_col2 = st.columns(2)
-    
-    with link_col1:
-        st.markdown("  Платформи навчання")
-        st.markdown("[ Coursera](https://coursera.org) — Курси від провідних університетів світу.")
-        st.markdown("[🦉 Duolingo](https://duolingo.com) — Інтерактивне вивчення іноземних мов.")
 
-    with link_col2:
-        st.markdown("###  Програмування та IT")
-        st.markdown("[ Codecademy](https://codecademy.com) — Практичні інтерактивні уроки з кодингу.")
-        st.markdown("[ Codewars](https://codewars.com) — Навчання через вирішення цікавих задач.")
+with tab3:
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("### Ігри та розваги")
+        st.markdown("[Lichess](https://lichess.org) — Безкоштовний шаховий сервер")
+        st.markdown("[Roblox](https://roblox.com) — Ігрова онлайн-платформа")
+        
+    with col2:
+        st.markdown("### Відео та навчання")
+        st.markdown("[YouTube](https://youtube.com) — Відеохостинг для навчання та відпочинку")
+        st.markdown("[Microsoft Teams](https://microsoft.com) — Платформа для командної роботи")
+
+    
 
 with tab4:
     st.header("🎮 Міні-гра: Вгадай число")

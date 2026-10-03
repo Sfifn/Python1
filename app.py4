@@ -1,0 +1,65 @@
+import os
+import urllib.parse
+import requests
+import streamlit as st
+from PIL import Image
+from io import BytesIO
+from dotenv import load_dotenv
+
+load_dotenv()
+
+HF_API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
+HF_TOKEN = os.getenv("HF_TOKEN")
+
+def generate_image(prompt):
+    try:
+        encoded_prompt = urllib.parse.quote(prompt)
+        url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=1024&nologo=true&seed=42"
+
+        response = requests.get(url,  timeout=45)
+
+        if response.stetus_code == 200:
+            return response.content, None
+        else:
+            return None, f"Сервіс тимчасово не працює({response.status_code})"
+    except requests.exceptions.Timeout:
+        return None, "Time-out"
+    except Exception as e:
+        return None, f"Помилка підключення: {e}"
+st.title("AI CREATIVE STUDIO")
+st.write("Напиши яке зображення хочеш отримати - ШІ створить його безкоштовно ")
+
+prompt = st.text_area("Опис зображення (промпт)", placeholder="Наприклад: логотип кафе")
+
+STYLES = {
+    "Без стилю (як написано)": "",
+    "Реалістичне фото": ", photorealistic, high detail, natural lighting",
+    "Акварель": ", watercolor painting style, soft edges, pastel colors",
+    "Мультфільм": ", 3D animated movie style, vibrant colors, friendly look",
+    "Піксель-арт": ", pixel art style, 16-bit retro game aesthetic",
+    "Чорно білий стиль": ", black and white, monochrome, high contrast, classic film look",
+    "Кіберпанк": ", cyberpunk style, neon lighting, futuristic city, dark atmosphere, retro-futurism"
+
+}
+style_choice = st.selectbox("Вибери стиль зображення:", list(STYLES.keys()))
+
+if st.button("Сгенерувати зображення") and prompt:
+    final_prompt = prompt + STYLES[style_choice]
+
+    with st.spinner("AI створює зображення"):
+        image_bytes, error = generate_image(final_prompt)
+    if error:
+        st.error(f"Не вдалося сгенерувати зображення: {error}")
+    elif image_bytes:
+        st.image(image_bytes, caption=f"Стиль:  {style_choice}", use_container_width=True)
+        st.session_state["last image"] = image_bytes
+if "last image" in st.session_state:
+    st.download_button(
+        label="Завантажити фото",
+        data=st.session_state["last image"],
+        file_name="ai_studio_result.png",
+        mine="image/png"
+    )
+
+
+
