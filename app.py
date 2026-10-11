@@ -1,88 +1,58 @@
 import streamlit as st
-import random
 
-st.set_page_config(page_title="Мій Супер-Додаток", page_icon="😁", layout="wide")
-st.title("Ласкаво просимо до мого Додатку! 🚀")
+st.title("🎮 Застосунок GameMatch")
 
-tab1, tab2, tab3, tab4 = st.tabs(["Про мене", "Мій інструмент", "🔗 Корисні посилання", "🎮 Вгадай число"])
+tab1, tab2, tab3 = st.tabs(["🕹️ Поиск ігор", "💵 Курс валют", "🌡️ Градуси"])
 
 with tab1:
-    st.header("Знайомство з автором")
-    col1, col2 = st.columns(2)
+    st.header("Поиск и жанри ігор")
     
-    with col1:
-        st.image("https://cdn-icons-png.flaticon.com/512/219/219988.png", width=200)
-        
-    with col2:
-        st.header("Привіт! Я майбутній Python Developer!")
-        st.write("Я навчаюсь в IT STEP. Створюю круті веб-додатки та вивчаю штучний інтелект.")
+    poisk = st.text_input("Введіть назву гри для пошуку:")
     
-    with st.container():
-        st.info("Контакту для зв'язку:")
-        st.markdown("GitHub: [Діма (Сфіфн)](https://github.com)")
-        st.markdown("Email: tssssssssdima@gmail.com")
+    games = [
+        {"name": "Minecraft", "genre": "Пісочниця, Виживання", "type": "Платна", "link": "https://minecraft.net"},
+        {"name": "Dota 2", "genre": "MOBA, Стратегия", "type": "Безкоштовна", "link": "https://dota2.com"},
+        {"name": "Counter-Strike 2", "genre": "Тактичний Шутер", "type": "Безкоштовна", "link": "https://counter-strike.net"},
+        {"name": "The Witcher 3", "genre": "RPG, Відкритий світ", "type": "Платна", "link": "https://thewitcher.com"},
+        {"name": "Cyberpunk 2077", "genre": "Action RPG", "type": "Платна", "link": "https://cyberpunk.net"},
+        {"name": "GTA V", "genre": "Екшен-пригода", "type": "Платна", "link": "https://rockstargames.com"},
+        {"name": "Roblox", "genre": "Песочниця", "type": "Безкоштовна", "link": "https://roblox.com"},
+        {"name": "League of Legends", "genre": "MOBA", "type": "Безкоштовна", "link": "https://leagueoflegends.com"},
+        {"name": "Valorant", "genre": "Тактичний шутер", "type": "Безкоштовна", "link": "https://playvalorant.com"},
+        {"name": "Apex Legends", "genre": "Королівська битва", "type": "Безкоштовна", "link": "https://ea.com"}
+    ]
+    
+    for game in games:
+        if poisk.lower() in game["name"].lower():
+            st.subheader(game["name"])
+            st.write(f"Жанр: {game['genre']}")
+            st.write(f"Тип: **{game['type']}**")
+            st.markdown(f"[➔ Перейти на сайт]({game['link']})")
+            st.write("---")
 
 with tab2:
-    st.header("Корисний інструмент: Конвертер температури")
-    st.write("Цей інструмент допоможе швидко перевести градуси Цельсія у Фаренгейти.")
+    st.header("Конвертер валют у Гривні (UAH)")
     
-    c1, c2 = st.columns(2)
-    with c1:
-     celsius = st.number_input("Введіть температуру в градусах Цельсія():", value=1.0, step=1.0)
-
-with c2:
-    fahrenheit = celsius * 1.8 + 32
-    st.write(f"{fahrenheit} °F")
-
-
-
+    amount = st.number_input("Введіть кількість валюти:", min_value=1, value=1, step=1)
+    usd = round(amount * 41.50, 1)
+    eur = round(amount * 45.20, 1)
+    gbp = round(amount * 54.10, 1)
+    pln = round(amount * 10.40, 1)
+    cad = round(amount * 30.20, 1)
+    
+    # Теперь просто выводим их на экран без всяких сложных двоеточий
+    st.write(f"**USD (Долар США):** {usd} грн.")
+    st.write(f"**EUR (Евро):** {eur} грн.")
+    st.write(f"**GBP (Фунт):** {gbp} грн.")
+    st.write(f"**PLN (Злотий):** {pln} грн.")
+    st.write(f"**CAD (Канадський долар):** {cad} грн.")
+    
+    
 with tab3:
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.markdown("### Ігри та розваги")
-        st.markdown("[Lichess](https://lichess.org) — Безкоштовний шаховий сервер")
-        st.markdown("[Roblox](https://roblox.com) — Ігрова онлайн-платформа")
-        
-    with col2:
-        st.markdown("### Відео та навчання")
-        st.markdown("[YouTube](https://youtube.com) — Відеохостинг для навчання та відпочинку")
-        st.markdown("[Microsoft Teams](https://microsoft.com) — Платформа для командної роботи")
-
+    st.header("Переведення Цельсія у Фаренгейт")
     
-
-with tab4:
-    st.header("🎮 Міні-гра: Вгадай число")
-    st.write("Я загадав число від 1 до 100. Спробуй його відгадати!")
-
-    if "secret_number" not in st.session_state:
-        st.session_state.secret_number = random.randint(1, 100)
-    if "feedback" not in st.session_state:
-        st.session_state.feedback = ""
-
-    user_guess = st.number_input("Введіть ваше число:", min_value=1, max_value=100, step=1, key="game_guess")
-    feedback_placeholder = st.empty()
-
-    btn_col1, btn_col2 = st.columns(2)
-
-    with btn_col1:
-        if st.button("Перевірити", type="primary"):
-            if user_guess < st.session_state.secret_number:
-                st.session_state.feedback = "📈 Загадане число більше!"
-            elif user_guess > st.session_state.secret_number:
-                st.session_state.feedback = "📉 Загадане число менше!"
-            else:
-                st.session_state.feedback = "🎉 Вітаємо! Ви вгадали!"
-
-    with btn_col2:
-        if st.button("Зіграти знову"):
-            st.session_state.secret_number = random.randint(1, 100)
-            st.session_state.feedback = "🔄 Загадано нове число! Спробуй відгадати."
-            
-    if st.session_state.feedback:
-        if "Вітаємо" in st.session_state.feedback:
-            feedback_placeholder.success(st.session_state.feedback)
-        elif "Загадано нове число" in st.session_state.feedback:
-            feedback_placeholder.info(st.session_state.feedback)
-        else:
-            feedback_placeholder.warning(st.session_state.feedback)
+    celsius = st.number_input("Градуси Цельсія (°C):", value=1.0, step=0.1)
+    
+    fahrenheit = (celsius * 9/5) + 32
+    
+    st.write(f"### Результат: {fahrenheit:.1f} °F")
